@@ -55,13 +55,45 @@ class Person(BaseModel):
     #            "is_married": False
     #        }
     #    }
+
+class PersonOut(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example="Camilin"
+    )
+    last_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example = "Duarte"
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=200,
+        example = "25"
+    )
+    hair_color: Optional[HairColor] = Field(default=None)
+    is_married: Optional[bool] = Field(default=None)
+    #class Config:
+    #    schema_extra = {
+    #        "example": {
+    #            "first_name": "Camilo",
+    #            "last_name": "Duarte",
+    #            "age": 25,
+    #            "hair_color": "black",
+    #            "is_married": False
+    #        }
+    #    }
 @app.get("/")
 def home():
     return {"Hello": "World"}
 
 #Resquest and response body
 
-@app.post("/person/new")
+@app.post("/person/new", response_model=PersonOut)
 def create_person(person: Person = Body(...)):
     return person
 
